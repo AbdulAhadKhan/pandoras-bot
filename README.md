@@ -1,1 +1,3 @@
-# pandoras-bot
+# Pandora's Bot
+
+The Ultimate Trading Bot
