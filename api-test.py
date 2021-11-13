@@ -1,14 +1,20 @@
-import os
-from dotenv import load_dotenv
-from binance.client import Client
+import json
+import websockets
 
-load_dotenv()
+uri = 'wss://testnet.binance.vision/ws'
 
-KEY = os.getenv('BINANCE_KEY')
-SECRET = os.getenv('BINANCE_SECRET')
-TESTNET = os.getenv('TESTNET')
+async def main():
+    async with websockets.connect(uri) as websocket:
+        await websocket.send(json.dumps({
+            "method": "SUBSCRIBE",
+            "params": ['bnbbtc@kline_1m'],
+            "id": 1
+        }))
 
-client = Client(KEY, SECRET, testnet=TESTNET)
-info = client.get_exchange_info()
+        while True:
+            response = await websocket.recv()
+            print(response)
 
-print(info['symbols'])
+if __name__ == '__main__':
+    import asyncio
+    asyncio.get_event_loop().run_until_complete(main())
