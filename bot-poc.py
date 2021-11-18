@@ -63,7 +63,6 @@ def handle_kline(kline):
             simple_moving_average()
             if len(rolling_sma) == 2:
                 td = trend_direction(rolling_sma[0], rolling_sma[1])
-                print(td)
                 lock_sell = td < 0
                 point_set_1 = np.array(list(rolling_typical_price)[-2:])
                 point_set_2 = np.array(rolling_sma)
@@ -79,6 +78,7 @@ def handle_kline(kline):
                                 f'at price {price}, ' +
                                 f'fiat state {state["cash"]}, ' +
                                 f'coin state {state["coins"]}')
+                        pprint.pprint(state)
 
 async def main():
     async with websockets.connect(uri) as websocket:
@@ -87,6 +87,9 @@ async def main():
             'params': ['btcusdt@kline_1m'],
             'id': 1
         }))
+
+        print('Pandora\'s Bot running...')
+        pprint.pprint(state)
 
         while True:
             result = json.loads(await websocket.recv())
